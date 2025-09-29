@@ -1,0 +1,121 @@
+version 7.0(3)I7(5a) Bios:version 05.31 
+hostname L3_HQ1_Core_SW1_C92300
+vdc L3_HQ1_Core_SW1_C92300 id 1
+  limit-resource vlan minimum 16 maximum 4094
+  limit-resource vrf minimum 2 maximum 4096
+  limit-resource port-channel minimum 0 maximum 511
+  limit-resource u4route-mem minimum 248 maximum 248
+  limit-resource u6route-mem minimum 96 maximum 96
+  limit-resource m4route-mem minimum 58 maximum 58
+  limit-resource m6route-mem minimum 8 maximum 8
+
+nv overlay evpn
+feature ospf
+feature bgp
+feature interface-vlan
+feature vn-segment-vlan-based
+feature lacp
+feature lldp
+feature bfd
+clock protocol none vdc 1
+feature nv overlay
+
+logging level l2fm 5
+username admin password 5 $5$lRrxlANj$fShgjnT5qAyuOGUckptVjesMVihdzOvnDTDwhjKNiRD  role network-admin
+no ip domain-lookup
+copp profile strict
+snmp-server user admin network-admin auth md5 0x28e7489f1343968b4faf48231ddb19bd priv 0x28e7489f1343968b4faf48231ddb19bd localizedkey
+rmon event 1 description FATAL(1) owner PMON@FATAL
+rmon event 2 description CRITICAL(2) owner PMON@CRITICAL
+rmon event 3 description ERROR(3) owner PMON@ERROR
+rmon event 4 description WARNING(4) owner PMON@WARNING
+rmon event 5 description INFORMATION(5) owner PMON@INFO
+snmp-server enable traps bridge newroot
+snmp-server enable traps bridge topologychange
+snmp-server enable traps stpx inconsistency
+snmp-server enable traps stpx root-inconsistency
+snmp-server enable traps stpx loop-inconsistency
+snmp-server community test group network-operator
+ntp server 103.81.104.78 prefer use-vrf default
+ntp source 10.1.170.1
+clock format 12-hours
+
+ip route 0.0.0.0/0 10.1.170.254
+no ip igmp snooping
+system vlan long-name
+vlan 1,3,5,10,20-34,41-63,70-75,80-81,94-102,130-140,149-150,152,159-165,170,176,182-186,190-192,200-204,260-264,270-274,306-309,330-337,431,435,450-453,455,457,513,740-767,831-835,900-904,910-911,1000-101
+3,1015-1017,1020-1025,1030-1034,1101,1113-1124,1126-1127,1132-1140,1199-1240,1299-1340,1342,1360,1363,1399-1440,1499,1501,1513-1515,1517-1522,1524,1526-1527,1532-1540,1599,1602,1604-1605,1610-1614,1616,161
+9-1621,1624-1634,1637-1641,1645-1649,1658-1662,1668-1672
+vlan 1675-1679,1681-1698,1701,1711-1713,1716-1730,1735-1736,1746-1750,1760-1764,1766,1771,1776-1781,1791-1796,1808-1809,1850,1861-1865,1867,1905,1915-1918,1924,1929,1941-1944,1960-1974,1995-1999,2010,2012-
+2013,2015-2021,2023,2028-2032,2061-2070,2100-2104,2110-2114,2116-2117,2119-2120,2129,2133-2134,2210-2214,2216-2217,2219-2220,2229,2233-2234,2275,2280-2285,2291-2296,2310-2314,2316-2317,2319-2320,2329,2333-
+2334,2338-2339,2351,2390,2401-2405,2407-2408,2410-2414,2416-2417,2419,2429,2433-2434,2503,2506
+vlan 2510-2514,2516-2517,2519,2529
+vlan 2531,2533-2534,2611,2617,2620,2634,2640-2643,2645,2671,2691,2700-2711,2720-2735,2740-2741,2745,2750-2754,2770-2775,2780,2782,2785-2790,2795-2798,2800-2801,2805-2820,2825-2836,2841,2846-2851,2856,2861-
+2865,2885-2890,2895-2899,2901-2905,2911,2916-2920,2926,2931,2936-2940,2946-2951,2956-2960,2966-2975,3010-3015,3026,3105-3109,3240,3302,3310-3314,3320-3323,3335-3339,3615-3619,3640,3660,3700-3706,3715-3725,
+3741-3745,3769,3777-3778,3805,3817,3883,3950
+vlan 3
+  name NOC-MGT-RTR
+vlan 5
+  name NVR-IP
+vlan 10
+  name Mahadi-core-to-user
+vlan 20
+  name Aricha-POP-Camera
+  no cdp enable
+spanning-tree vlan 1-52,54-3967 priority 0
+vrf context management
+
+
+interface Vlan1
+
+interface Vlan3
+  mtu 9216
+  no ip redirects
+  ip address 10.200.200.17/30
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf 100 area 0.0.0.0
+
+interface Vlan100
+  no shutdown
+  ip address 10.1.170.1/24
+
+interface port-channel1
+  description To-Cache-SW
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 70,81,94-98,100,149-152,165
+
+  interface Ethernet1/1
+  description Jogo-CCR-1009
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 260-264,2851,2890
+  no shutdown
+
+interface Ethernet1/2
+  description Mijan-Kanchannagar-Pri
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 1118,1218,1318,1418,1518
+  channel-group 10
+  no shutdown
+
+interface Ethernet1/60
+  description To-Cache-SW
+  lacp rate fast
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 70,81,94-98,100,149-152,165
+  channel-group 1 mode active
+  no shutdown
+
+interface mgmt0
+  vrf member management
+line console
+line vty
+boot nxos bootflash:/nxos.7.0.3.I7.5a.bin 
+monitor session 1 
+
+logging server 103.13.192.46 4
+logging source-interface Vlan100
