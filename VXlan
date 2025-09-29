@@ -1,0 +1,49 @@
+vlan 1139
+  name Netbuzz-Dhamrai-IIG-254to7-1139
+  vn-segment 1139
+vlan 1239
+  name Netbuzz-Dhamrai-GGC-254to7-1239 
+  vn-segment 1239
+vlan 1339
+  name Netbuzz-Dhamrai-FNA-254to7-1339
+  vn-segment 1339
+vlan 1439
+  name Netbuzz-Dhamrai-BDIX-254to7-1439
+  vn-segment 1439
+vlan 1539
+  name Netbuzz-Dhamrai-CDN-254to7-1539
+  vn-segment 1539
+
+interface nve1
+ member vni 1139
+    ingress-replication protocol bgp
+  member vni 1239
+    ingress-replication protocol bgp
+  member vni 1339
+    ingress-replication protocol bgp
+  member vni 1439
+    ingress-replication protocol bgp
+  member vni 1539
+    ingress-replication protocol bgp
+	
+evpn
+vni 1139 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+  vni 1239 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+  vni 1339 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+  vni 1439 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+  vni 1539 l2
+    rd auto
+    route-target import auto
+    route-target export auto
