@@ -1,0 +1,265 @@
+hostname VX_Core-RTR-253
+vdc VX_Core-RTR-253 id 1
+  limit-resource vlan minimum 16 maximum 4094
+  limit-resource vrf minimum 2 maximum 4096
+  limit-resource port-channel minimum 0 maximum 511
+  limit-resource u4route-mem minimum 248 maximum 248
+  limit-resource u6route-mem minimum 96 maximum 96
+  limit-resource m4route-mem minimum 58 maximum 58
+  limit-resource m6route-mem minimum 8 maximum 8
+
+feature nxapi
+nv overlay evpn
+feature ospf
+feature bgp
+feature pim
+feature fabric forwarding
+feature grpc
+feature interface-vlan
+feature vn-segment-vlan-based
+feature lacp
+feature lldp
+feature bfd
+clock timezone BDT 6 0
+feature nv overlay
+feature ngoam
+
+no password strength-check
+username admin password 5 $5$OAALGG$SbyQtxQOGpHgtRyKaFuNj7H/Ls8aXFp5Yg2MdphBJl1  role network-admin
+ip domain-lookup
+copp profile strict
+snmp-server user admin network-admin auth md5 37531A93EAE721AFC50E4505B524DC9907C8 priv 37474F96F5A92FF3815B130BEA2988BE4CDE localizedV2key
+rmon event 1 log trap public description FATAL(1) owner PMON@FATAL
+rmon event 2 log trap public description CRITICAL(2) owner PMON@CRITICAL
+rmon event 3 log trap public description ERROR(3) owner PMON@ERROR
+rmon event 4 log trap public description WARNING(4) owner PMON@WARNING
+rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
+snmp-server community test group network-operator
+ntp server 103.81.104.245 use-vrf default
+ntp source 103.81.104.245
+
+vlan 1
+
+vrf context management
+ngoam install acl
+ngoam xconnect hb-interval 5000
+
+nxapi http port 80
+
+
+interface Vlan1
+
+interface port-channel1
+  description To-Nobab-PoP-104-P1
+  mtu 9216
+  no ip redirects
+  ip address 10.200.200.105/30
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf 100 area 0.0.0.0
+
+interface port-channel2
+  description To-Puspo-102
+   mtu 9216
+  no ip redirects
+  ip address 10.200.200.101/30
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf 100 area 0.0.0.0
+
+interface port-channel3
+  description To-Cahri-PoP-103
+  mtu 9216
+  no ip redirects
+  ip address 10.200.200.109/30
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf 100 area 0.0.0.0
+
+interface port-channel253
+  description To-VX_Core-RTR-253
+  mtu 9216
+  ip address 10.200.200.250/30
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf 100 area 0.0.0.0
+
+interface nve1
+  no shutdown
+  host-reachability protocol bgp
+  source-interface loopback0
+
+interface Ethernet1/1
+
+interface Ethernet1/2
+interface Ethernet1/21
+
+interface Ethernet1/22
+
+interface Ethernet1/23
+
+interface Ethernet1/24
+
+interface Ethernet1/25
+
+interface Ethernet1/26
+
+interface Ethernet1/27
+
+interface Ethernet1/28
+
+interface Ethernet1/29
+
+interface Ethernet1/30
+
+interface Ethernet1/31
+
+interface Ethernet1/32
+
+interface Ethernet1/33
+
+interface Ethernet1/34
+
+interface Ethernet1/35
+
+interface Ethernet1/36
+
+interface Ethernet1/37
+
+interface Ethernet1/38
+
+interface Ethernet1/39
+
+interface Ethernet1/40
+
+interface Ethernet1/41
+
+interface Ethernet1/42
+
+interface Ethernet1/43
+
+interface Ethernet1/44
+
+interface Ethernet1/45
+
+interface Ethernet1/46
+
+interface Ethernet1/47
+
+interface Ethernet1/48
+
+interface Ethernet1/49
+  description Nawabganj-1st-100G-6F
+  lacp rate fast
+  mtu 9216
+  channel-group 1 mode active
+  no shutdown
+
+interface Ethernet1/50
+  description Nawabganj-2nd-100G-4F
+  lacp rate fast
+  mtu 9216
+   channel-group 1 mode active
+  no shutdown
+
+interface Ethernet1/51
+  description Pushpokhali-NXS-4F
+  lacp rate fast
+  mtu 9216
+  channel-group 2 mode active
+  no shutdown
+
+interface Ethernet1/52
+  description Pushpokhali-NXS-6F
+  lacp rate fast
+  mtu 9216
+  channel-group 2 mode active
+  no shutdown
+
+interface Ethernet1/53
+  no shutdown
+
+interface Ethernet1/54
+  no shutdown
+
+interface Ethernet1/55
+  description To-Cari-PoP-60
+  mtu 9216
+  channel-group 3 mode active
+  no shutdown
+
+interface Ethernet1/56
+  no shutdown
+
+interface Ethernet1/57
+  no shutdown
+
+interface Ethernet1/58
+  no shutdown
+
+interface Ethernet1/59
+  description To-VX_Core-RTR-254
+  mtu 9216
+  channel-group 253 mode active
+  no shutdown
+
+interface Ethernet1/60
+  description To-VX_Core-RTR-254
+  mtu 9216
+  channel-group 253 mode active
+  no shutdown
+
+interface mgmt0
+  vrf member management
+
+interface loopback0
+  ip address 192.168.254.253/32
+  ip router ospf 100 area 0.0.0.0
+icam monitor scale
+
+line console
+line vty
+boot nxos bootflash:/nxos.9.3.12.bin 
+router ospf 100
+  bfd
+  router-id 192.168.254.253
+  passive-interface default
+evpn
+
+
+interface Ethernet1/3
+
+interface Ethernet1/4
+
+interface Ethernet1/5
+
+interface Ethernet1/6
+
+interface Ethernet1/7
+
+interface Ethernet1/8
+
+interface Ethernet1/9
+
+interface Ethernet1/10
+
+interface Ethernet1/11
+
+interface Ethernet1/12
+
+interface Ethernet1/13
+
+interface Ethernet1/14
+
+interface Ethernet1/15
+
+interface Ethernet1/16
+
+interface Ethernet1/17
+
+interface Ethernet1/18
+
+interface Ethernet1/19
+
+interface Ethernet1/20
+  
